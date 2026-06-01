@@ -32,6 +32,8 @@ class IndicationVerdict:
 class ClinicalIndicationJudge:
     judge_id = "clinical_indication"
     judge_version = "v0.1"
+    # Backed by dotflows/clinical_indication_review.md (the integrity-gate judge).
+    dotflow_role = "clinical_indication"
 
     def __init__(self, leave_oe_out: bool = False) -> None:
         self.leave_oe_out = leave_oe_out

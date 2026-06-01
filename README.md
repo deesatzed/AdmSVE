@@ -92,6 +92,25 @@ python -m py_compile $(find src -name '*.py')
 The five mandated tests: leakage assertion · judge reproducibility · planted-case integrity
 suppression (100%) · willingness-to-say-observation · criteria-leakage scan.
 
+## OpenEvidence DotFlows
+
+`dotflows/` holds the OE-format prompts (authored in the OpenEvidence Ask-DotFlow sample style:
+persona + stepwise instructions + specified output sections + forbidden-phrase guardrails + a final
+quality check). Each ends with a **fenced JSON block** whose keys match the engine contracts, so the
+real OE output ingests directly. The registry `src/admission_engine/dotflows.py` pins each engine
+role to its DotFlow file and output schema; the deterministic stubs mimic these contracts in Phase 1.
+
+| Engine role | DotFlow | Output schema |
+|---|---|---|
+| Recommender | `status_likelihood_recommender.md` | `…recommender_output.v0.1` |
+| Status-conformance judge | `status_conformance_review.md` | `…status_conformance_output.v0.1` |
+| Clinical-indication judge (integrity gate) | `clinical_indication_review.md` | `…clinical_indication_output.v0.1` |
+| Documentation-gap capture | `documentation_gap_capture.md` | `…documentation_gap_output.v0.1` |
+| Denial-overturn support (retrospective) | `denial_overturn_support.md` | `…denial_overturn_output.v0.1` |
+
+Every DotFlow enforces the decision-time boundary (stop on leakage), carries the
+*status accuracy, never status inflation* guardrail, and contains **no proprietary criteria text**.
+
 ## Open decisions (yours to make)
 
 See `prereg/OPEN_DECISIONS.md` — truth definition, InterQual vs MCG vs both, decision-time

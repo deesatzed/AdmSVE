@@ -39,6 +39,8 @@ class StatusVerdict:
 class StatusConformanceJudge:
     judge_id = "status_conformance"
     judge_version = "v0.1"
+    # Backed by dotflows/status_conformance_review.md (public layer; no proprietary criteria text).
+    dotflow_role = "status_conformance"
 
     def __init__(self, criteria_interface: LicensedCriteriaInterface | None = None) -> None:
         self._criteria = criteria_interface or StubbedCriteriaInterface()

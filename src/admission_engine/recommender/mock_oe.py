@@ -20,6 +20,9 @@ from .base import PROVENANCE_TAGS, Recommendation, RecommendedAction, Recommende
 class MockOpenEvidenceRecommender(Recommender):
     recommender_id = "mock_open_evidence"
     recommender_version = "stub.v0.1"
+    # The real OE recommender runs this DotFlow (see dotflows/status_likelihood_recommender.md and
+    # the registry in admission_engine.dotflows). The stub mimics that DotFlow's output contract.
+    dotflow_role = "recommender"
 
     def recommend(self, case_view: dict[str, Any]) -> Recommendation:
         case_id = case_view.get("case_id", "")

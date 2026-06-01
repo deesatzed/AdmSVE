@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "age_band": "40-64",
+    "language": "other",
+    "planted_kind": "LEAK",
+    "race_ethnicity": "group_b"
+  },
+  "actions": [],
+  "case_id": "SYN-LEAK-0003",
+  "current_visit": {
+    "expected_midnights": 2,
+    "final_adjudicated_status": "inpatient",
+    "intensity_of_service_score": 0.5,
+    "severity_score": 0.6
+  },
+  "di_results": [
+    "synthetic CXR read available pre-decision"
+  ],
+  "history_comorbidities": [],
+  "labs": [
+    "synthetic CBC",
+    "synthetic BMP"
+  ],
+  "mode": "synthetic",
+  "notes": [
+    "synthetic clinician note (pre-admission-decision)"
+  ],
+  "payer": "SyntheticCommercial PPO",
+  "plan_type": "commercial",
+  "presenting_problem": "synthetic presenting problem",
+  "source": "synthetic_generator",
+  "truth": {
+    "initial_payer_decision": "inpatient",
+    "post_appeal_adjudicated_status": "inpatient"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "_meta": {
+    "age_band": "75+",
+    "language": "other",
+    "planted_kind": "INPT",
+    "race_ethnicity": "unknown"
+  },
+  "actions": [
+    {
+      "action_id": "a-doc-1",
+      "clinical_indication_tag": "documentation_of_existing_fact",
+      "description": "Document already-present telemetry requirement reflecting existing severity",
+      "helps_status": true,
+      "present": false
+    }
+  ],
+  "case_id": "SYN-INPT-0057",
+  "current_visit": {
+    "criteria_confidence": 0.9,
+    "documentation_gaps": [],
+    "documented_complex_factors": true,
+    "expected_midnights": 2,
+    "intensity_of_service_score": 0.8,
+    "on_inpatient_only_list": false,
+    "severity_score": 0.85,
+    "synthetic_meets_inpatient_criteria": true
+  },
+  "di_results": [
+    "synthetic CXR read available pre-decision"
+  ],
+  "history_comorbidities": [
+    "synthetic CHF",
+    "synthetic CKD",
+    "synthetic DM2"
+  ],
+  "labs": [
+    "synthetic CBC",
+    "synthetic BMP"
+  ],
+  "mode": "synthetic",
+  "notes": [
+    "synthetic clinician note (pre-admission-decision)"
+  ],
+  "payer": "Traditional Medicare",
+  "plan_type": "traditional_medicare",
+  "presenting_problem": "synthetic presenting problem",
+  "source": "synthetic_generator",
+  "truth": {
+    "at_risk_wrongful_observation": false,
+    "downgraded_for_documentation": false,
+    "initial_payer_decision": "inpatient",
+    "post_appeal_adjudicated_status": "inpatient",
+    "ur_physician_advisor_determination": "inpatient"
+  }
+}

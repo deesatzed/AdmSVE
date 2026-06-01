@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "age_band": "40-64",
+    "language": "english",
+    "planted_kind": "DOCGAP",
+    "race_ethnicity": "group_b"
+  },
+  "actions": [
+    {
+      "action_id": "a-doc-2",
+      "clinical_indication_tag": "documentation_of_existing_fact",
+      "description": "Capture documented continuous-monitoring requirement already in the chart",
+      "helps_status": true,
+      "present": false
+    }
+  ],
+  "case_id": "SYN-DOCGAP-0055",
+  "current_visit": {
+    "criteria_confidence": 0.7,
+    "documentation_gaps": [
+      "severity-of-illness markers present but not captured in admission note",
+      "intensity-of-service (continuous monitoring) provided but not documented"
+    ],
+    "documented_complex_factors": true,
+    "expected_midnights": 2,
+    "intensity_of_service_score": 0.75,
+    "on_inpatient_only_list": false,
+    "severity_score": 0.8,
+    "synthetic_meets_inpatient_criteria": true
+  },
+  "di_results": [
+    "synthetic CXR read available pre-decision"
+  ],
+  "history_comorbidities": [
+    "synthetic COPD",
+    "synthetic CAD"
+  ],
+  "labs": [
+    "synthetic CBC",
+    "synthetic BMP"
+  ],
+  "mode": "synthetic",
+  "notes": [
+    "synthetic clinician note (pre-admission-decision)"
+  ],
+  "payer": "SyntheticCommercial PPO",
+  "plan_type": "commercial",
+  "presenting_problem": "synthetic presenting problem",
+  "source": "synthetic_generator",
+  "truth": {
+    "at_risk_wrongful_observation": true,
+    "downgraded_for_documentation": true,
+    "initial_payer_decision": "observation",
+    "post_appeal_adjudicated_status": "inpatient",
+    "ur_physician_advisor_determination": "inpatient"
+  }
+}

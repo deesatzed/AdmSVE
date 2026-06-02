@@ -62,8 +62,15 @@ Real EHR/claims exports must be mapped into the case-snapshot contract WITHOUT c
 - [ ] **Leakage assertion passes on real fields** — every post-decision/adjudication/post-discharge
       field in the real schema is in `FORBIDDEN_LEAKAGE_KEYS` (extend the set to match the real
       export's column names). The run must fail closed on any leak.
-- [ ] **PHI redaction** verified on real notes before any text reaches the recommender path
-      (`redaction.py` is the defense-in-depth layer; the approved environment is the primary control).
+- [ ] **PHI redaction** verified on real notes before any text reaches the recommender path. The
+      `redaction/` package is the defense-in-depth layer (the approved environment is the PRIMARY
+      control): `DeterministicRedactor` (HIPAA-18-style regex floor, std-lib, always on) +
+      `LayeredRedactor` + an OPTIONAL `OpenMedRedactor` model backend. The model backend is gated:
+      it refuses to load unless `ADMISSION_ENGINE_PHI_ENV_APPROVED=1` and the `redaction-model`
+      extra is installed; absent either, redaction degrades to the deterministic floor (fail-safe,
+      never fail-open on PHI). The OpenMed models are GENERAL-PII ("not a clinical PHI model" per
+      their cards) — recall boosters on the floor, never the sole control. Recalibrate the model
+      min-score on a domain eval set before reliance.
 - [ ] **Frailty / SDOH fields** (`cfs_score`, `adl_dependencies`, `cognitive_status`,
       `social_support`, `recent_admissions`) mapped if present in the real data; absent → "unknown"
       (honest-negative, never default-to-inpatient).

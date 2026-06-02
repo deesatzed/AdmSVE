@@ -47,7 +47,27 @@ potential** metric and is never treated as primary truth.
 - The licensed-criteria conformance check is a **stubbed abstract port** — **no proprietary criteria
   text anywhere** (enforced by `scan-leakage` + a test).
 - Real data is blocked until an approved environment + BAA + IRB/QI gate is documented
-  (`prereg/PRE_REGISTRATION.md`).
+  (`prereg/PRE_REGISTRATION.md`, `prereg/REAL_DATA_READINESS.md`).
+
+## PHI/PII redaction (`redaction/`)
+
+Defense-in-depth on any text the engine handles (the approved §8 environment is the PRIMARY control):
+
+- **`DeterministicRedactor`** — HIPAA-18-style regex floor. Std-lib only, fully deterministic,
+  cross-platform (macOS/Linux/Windows), always on. Catches SSN, MRN, phone, email, DOB, address,
+  health-plan ID, IP, etc.
+- **`LayeredRedactor`** — the deterministic floor unioned with optional backends. If an optional
+  backend fails or is absent, the floor still redacts (**fail-safe — never fail-open on PHI**).
+- **`OpenMedRedactor`** (optional, gated) — an OpenMed token-classification model backend
+  (`openmed[hf]` PyTorch is the portable path; MLX 8-bit is an Apple-Silicon acceleration). It
+  **refuses to load** unless `ADMISSION_ENGINE_PHI_ENV_APPROVED=1` and the `redaction-model` extra is
+  installed. The OpenMed models are general-PII ("not a clinical PHI model" per their cards) — a
+  recall booster on the floor, never the sole control. Recalibrate `min_score` on a domain eval set.
+
+```bash
+pip install -e ".[redaction-model]"          # portable (CPU/CUDA, all platforms)
+pip install -e ".[redaction-model-mlx]"       # Apple-Silicon acceleration (optional)
+```
 
 ## Run it
 

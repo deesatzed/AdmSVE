@@ -42,8 +42,8 @@ def test_kb_version_is_pinned():
     assert load_kb().version == KB_VERSION
 
 
-def test_kb_version_bumped_to_v02():
-    assert KB_VERSION == "admission_engine.kb.v0.2"
+def test_kb_version_bumped_to_v03():
+    assert KB_VERSION == "admission_engine.kb.v0.3"
 
 
 def test_frailty_signals_loaded_and_covered_by_provenance():

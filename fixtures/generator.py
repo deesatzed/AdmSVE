@@ -297,3 +297,25 @@ def _sdoh_only_case(idx: int) -> dict[str, Any]:
     case["case_id"] = f"SYN-SDOH-{idx:04d}"
     case["current_visit"].update({"social_support": "none"})  # no care_delivery_barrier_documented
     return case
+
+
+# ---------------------------------------------------------------------------
+# Disease-condition test builders (matched-condition cases for the gap library).
+# Not added to the default corpus; used explicitly by condition tests.
+# ---------------------------------------------------------------------------
+
+def condition_case(idx: int, presenting_problem: str, clinical_note: str = "") -> dict[str, Any]:
+    """A synthetic case whose presenting_problem matches a condition pack."""
+    case = _honest_negative_case(idx)
+    case["case_id"] = f"SYN-COND-{idx:04d}"
+    case["presenting_problem"] = presenting_problem
+    if clinical_note:
+        case["current_visit"]["clinical_note"] = clinical_note
+    return case
+
+
+def condition_obs_case(idx: int, presenting_problem: str, observation_note: str) -> dict[str, Any]:
+    """A matched-condition case carrying observation-leaning text but no inpatient evidence."""
+    case = condition_case(idx, presenting_problem, observation_note)
+    case["case_id"] = f"SYN-CONDOBS-{idx:04d}"
+    return case

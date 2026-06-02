@@ -1,0 +1,111 @@
+{
+  "condition": "copd",
+  "aliases": [
+    "copd",
+    "copd exacerbation",
+    "aecopd",
+    "chronic obstructive pulmonary disease",
+    "emphysema",
+    "chronic bronchitis"
+  ],
+  "si_thresholds": [
+    "hypoxemia requiring oxygen above baseline",
+    "respiratory acidosis with hypercapnia on blood gas",
+    "accessory muscle use or impending respiratory fatigue",
+    "altered mental status attributable to hypercapnia"
+  ],
+  "is_requirements": [
+    "noninvasive positive-pressure ventilation (BiPAP) with monitoring",
+    "frequent or continuous bronchodilator nebulization with reassessment",
+    "systemic corticosteroids with response monitoring",
+    "serial arterial or venous blood gas sampling",
+    "continuous pulse oximetry"
+  ],
+  "two_midnight_expectation": "Variable; uncomplicated exacerbations responding to bronchodilators and steroids may resolve under two midnights, while hypercapnic respiratory failure requiring NIPPV commonly crosses two midnights.",
+  "denial_downgrade_triggers": [
+    "rapid response to nebulizers without oxygen escalation",
+    "no respiratory acidosis and stable mental status",
+    "no documented failed outpatient therapy"
+  ],
+  "overturn_support_factors": [
+    "documented hypercapnic respiratory failure requiring NIPPV",
+    "oxygen requirement above documented home baseline",
+    "frailty or comorbidity raising decompensation and readmission risk"
+  ],
+  "observation_features": [
+    "single nebulizer response with return to baseline oxygen saturation",
+    "no respiratory acidosis on blood gas",
+    "anticipated short stay with stable vitals"
+  ],
+  "inpatient_features": [
+    "noninvasive positive-pressure ventilation initiated",
+    "respiratory acidosis with hypercapnia",
+    "supplemental oxygen escalated above baseline"
+  ],
+  "gap_questions": [
+    {
+      "question": "Is the current oxygen requirement documented relative to the patient's home baseline?",
+      "gap_class": "documentation",
+      "targets_field": "current_visit.oxygen_requirement"
+    },
+    {
+      "question": "Was a blood gas obtained, and does it show respiratory acidosis or hypercapnia?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "labs"
+    },
+    {
+      "question": "Is NIPPV/BiPAP initiation and the response to it recorded?",
+      "gap_class": "treatment_escalation",
+      "targets_field": "current_visit.respiratory_support"
+    }
+  ],
+  "documentation_phrases": [
+    {
+      "phrase": "I expect medically necessary hospital care to span at least two midnights because the patient requires hospital-only services that cannot be safely delivered at a lower level of care.",
+      "requires_evidence_tokens": [
+        "bipap",
+        "noninvasive",
+        "hypercapnia",
+        "acidosis",
+        "oxygen"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_two_midnight",
+          "source": "CMS Two-Midnight Rule (public regulatory layer)",
+          "year": 2013,
+          "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+        }
+      ]
+    },
+    {
+      "phrase": "Lower-level care is not safe because the patient requires the hospital-only services documented above with ongoing reassessment.",
+      "requires_evidence_tokens": [
+        "bipap",
+        "noninvasive",
+        "hypercapnia",
+        "acidosis",
+        "oxygen"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_ur_482_30",
+          "source": "42 CFR 482.30 (hospital utilization review)",
+          "year": 2024,
+          "locator": "UR plan; medical necessity of admissions and continued stays"
+        }
+      ]
+    }
+  ],
+  "provenance": "peer_reviewed",
+  "citations": [
+    {
+      "ref_id": "gold_copd",
+      "source": "Global Initiative for Chronic Obstructive Lung Disease (GOLD) report",
+      "year": 2025,
+      "locator": "exacerbation management; NIPPV indications"
+    }
+  ]
+}

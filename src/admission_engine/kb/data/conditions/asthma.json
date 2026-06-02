@@ -1,0 +1,110 @@
+{
+  "condition": "asthma",
+  "aliases": [
+    "asthma",
+    "asthma exacerbation",
+    "status asthmaticus",
+    "reactive airway",
+    "bronchospasm"
+  ],
+  "si_thresholds": [
+    "persistent wheeze or dyspnea after initial treatment",
+    "low oxygen saturation",
+    "poor one-hour treatment response",
+    "drowsiness or confusion"
+  ],
+  "is_requirements": [
+    "repeated short-acting bronchodilator and ipratropium dosing",
+    "oxygen titration",
+    "serial lung-function or symptom reassessment",
+    "intravenous magnesium",
+    "systemic steroids"
+  ],
+  "two_midnight_expectation": "Often under two midnights when lung function and oxygenation improve after initial treatment; longer when acute-care bronchodilator need and obstruction persist.",
+  "denial_downgrade_triggers": [
+    "subjective symptoms only without objective reassessment",
+    "no one-hour response documented",
+    "home action plan not addressed"
+  ],
+  "overturn_support_factors": [
+    "persistent objective obstruction after initial therapy",
+    "recurrent acute-care bronchodilator need",
+    "unsafe home management capacity"
+  ],
+  "observation_features": [
+    "rapid symptom improvement",
+    "normalizing oxygen saturation",
+    "safe home action plan in place"
+  ],
+  "inpatient_features": [
+    "recurrent bronchodilator need",
+    "persistent obstruction",
+    "intravenous magnesium required"
+  ],
+  "gap_questions": [
+    {
+      "question": "What was the one-hour reassessment response?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "current_visit.one_hour_response"
+    },
+    {
+      "question": "Is the patient still desaturating or requiring repeated bronchodilators?",
+      "gap_class": "treatment_escalation",
+      "targets_field": "current_visit.bronchodilator_frequency"
+    },
+    {
+      "question": "Can the home action plan be executed safely?",
+      "gap_class": "geriatric_safety",
+      "targets_field": "social_support"
+    }
+  ],
+  "documentation_phrases": [
+    {
+      "phrase": "I expect medically necessary hospital care to span at least two midnights because the patient requires hospital-only services that cannot be safely delivered at a lower level of care.",
+      "requires_evidence_tokens": [
+        "bronchodilator",
+        "magnesium",
+        "obstruction",
+        "oxygen",
+        "wheeze"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_two_midnight",
+          "source": "CMS Two-Midnight Rule (public regulatory layer)",
+          "year": 2013,
+          "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+        }
+      ]
+    },
+    {
+      "phrase": "Lower-level care is not safe because the patient requires the hospital-only services documented above with ongoing reassessment.",
+      "requires_evidence_tokens": [
+        "bronchodilator",
+        "magnesium",
+        "obstruction",
+        "oxygen",
+        "wheeze"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_ur_482_30",
+          "source": "42 CFR 482.30 (hospital utilization review)",
+          "year": 2024,
+          "locator": "UR plan; medical necessity of admissions and continued stays"
+        }
+      ]
+    }
+  ],
+  "provenance": "peer_reviewed",
+  "citations": [
+    {
+      "ref_id": "gina_2025",
+      "source": "Global Initiative for Asthma (GINA) 2025 report",
+      "year": 2025,
+      "locator": "acute exacerbation severity, monitoring, hospitalization decision"
+    }
+  ]
+}

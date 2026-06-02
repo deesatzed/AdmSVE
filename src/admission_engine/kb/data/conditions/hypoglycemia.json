@@ -1,0 +1,108 @@
+{
+  "condition": "hypoglycemia",
+  "aliases": [
+    "hypoglycemia",
+    "low blood sugar",
+    "recurrent hypoglycemia"
+  ],
+  "si_thresholds": [
+    "recurrent low glucose",
+    "renal failure",
+    "long-acting agent or sulfonylurea effect",
+    "falls",
+    "delirium"
+  ],
+  "is_requirements": [
+    "serial glucose monitoring",
+    "intravenous dextrose or glucagon as needed",
+    "medication adjustment",
+    "nutrition support"
+  ],
+  "two_midnight_expectation": "A single correctable event with durable euglycemia may be observation-appropriate; rebound risk from ongoing drivers or unsafe self-management commonly supports an inpatient expectation.",
+  "denial_downgrade_triggers": [
+    "focus on corrected glucose only",
+    "no serial trend",
+    "home management capacity not assessed"
+  ],
+  "overturn_support_factors": [
+    "recurrent lows after feeding",
+    "active long-acting drug effect",
+    "unsafe self-management"
+  ],
+  "observation_features": [
+    "single correctable event",
+    "durable euglycemia",
+    "safe meal plan"
+  ],
+  "inpatient_features": [
+    "rebound risk",
+    "serial monitoring need",
+    "unsafe self-management"
+  ],
+  "gap_questions": [
+    {
+      "question": "Are there recurrent lows after feeding?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "current_visit.glucose_trend"
+    },
+    {
+      "question": "Is a long-acting agent still active?",
+      "gap_class": "treatment_escalation",
+      "targets_field": "current_visit.medications"
+    },
+    {
+      "question": "Who manages meals and medications overnight?",
+      "gap_class": "geriatric_safety",
+      "targets_field": "social_support"
+    }
+  ],
+  "documentation_phrases": [
+    {
+      "phrase": "I expect medically necessary hospital care to span at least two midnights because the patient requires hospital-only services that cannot be safely delivered at a lower level of care.",
+      "requires_evidence_tokens": [
+        "recurrent",
+        "sulfonylurea",
+        "glucose",
+        "rebound",
+        "renal"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_two_midnight",
+          "source": "CMS Two-Midnight Rule (public regulatory layer)",
+          "year": 2013,
+          "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+        }
+      ]
+    },
+    {
+      "phrase": "Lower-level care is not safe because the patient requires the hospital-only services documented above with ongoing reassessment.",
+      "requires_evidence_tokens": [
+        "recurrent",
+        "sulfonylurea",
+        "glucose",
+        "rebound",
+        "renal"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_ur_482_30",
+          "source": "42 CFR 482.30 (hospital utilization review)",
+          "year": 2024,
+          "locator": "UR plan; medical necessity of admissions and continued stays"
+        }
+      ]
+    }
+  ],
+  "provenance": "derived_concept",
+  "citations": [
+    {
+      "ref_id": "cms_two_midnight",
+      "source": "CMS Two-Midnight Rule (public regulatory layer)",
+      "year": 2013,
+      "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+    }
+  ]
+}

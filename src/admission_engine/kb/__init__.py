@@ -20,7 +20,7 @@ from pathlib import Path
 
 from .provenance import Citation, Provenance, coerce_provenance, parse_citations
 
-KB_VERSION = "admission_engine.kb.v0.2"
+KB_VERSION = "admission_engine.kb.v0.3"
 KB_DATA_DIR = Path(__file__).resolve().parent / "data"
 
 
@@ -73,6 +73,27 @@ class FrailtySignal:
 
 
 @dataclass(frozen=True)
+class GapQuestion:
+    """A clarifying question whose ANSWER, if already true in the record, is a Tier-1
+    documentation-of-existing-fact prompt. NEVER new care, NEVER a status assertion."""
+
+    question: str
+    gap_class: str  # diagnostic_clarification | treatment_escalation | geriatric_safety | documentation
+    targets_field: str = ""
+
+
+@dataclass(frozen=True)
+class DocumentationPhrase:
+    """A suggested chart phrase emitted ONLY when its evidence tokens already overlap the record
+    (no fabrication). Carries its own provenance + >=1 citation (parse_citations fail-closed)."""
+
+    phrase: str
+    requires_evidence_tokens: tuple[str, ...]
+    provenance: Provenance
+    citations: tuple[Citation, ...]
+
+
+@dataclass(frozen=True)
 class ConditionEntry:
     condition: str  # slug, e.g. "syncope"
     aliases: tuple[str, ...]  # presenting-problem synonyms for lookup
@@ -83,6 +104,13 @@ class ConditionEntry:
     overturn_support_factors: tuple[str, ...]
     provenance: Provenance
     citations: tuple[Citation, ...]
+    # --- additive v0.3 fields (default-empty; existing packs + tests unaffected) ---
+    # NOTE: recommended_status and confidence_level are DELIBERATELY EXCLUDED — they are status
+    # levers and would violate "status accuracy, never status inflation".
+    observation_features: tuple[str, ...] = ()  # OBS-leaning signals -> strengthen honest-negative
+    inpatient_features: tuple[str, ...] = ()  # explicit inpatient-supporting features
+    gap_questions: tuple[GapQuestion, ...] = ()
+    documentation_phrases: tuple[DocumentationPhrase, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -187,6 +215,34 @@ def _build_frailty(raw: list[dict]) -> tuple[FrailtySignal, ...]:
     return tuple(out)
 
 
+def _build_gap_questions(raw, ctx: str) -> tuple[GapQuestion, ...]:
+    out: list[GapQuestion] = []
+    for e in raw or []:
+        out.append(
+            GapQuestion(
+                question=str(e["question"]),
+                gap_class=str(e.get("gap_class", "documentation")),
+                targets_field=str(e.get("targets_field", "")),
+            )
+        )
+    return tuple(out)
+
+
+def _build_doc_phrases(raw, ctx: str) -> tuple[DocumentationPhrase, ...]:
+    out: list[DocumentationPhrase] = []
+    for i, e in enumerate(raw or []):
+        c = f"{ctx}.documentation_phrases[{i}]"
+        out.append(
+            DocumentationPhrase(
+                phrase=str(e["phrase"]),
+                requires_evidence_tokens=_str_tuple(e.get("requires_evidence_tokens")),
+                provenance=coerce_provenance(e["provenance"], c),
+                citations=parse_citations(e.get("citations"), c),
+            )
+        )
+    return tuple(out)
+
+
 def _build_condition(raw: dict, ctx: str) -> ConditionEntry:
     return ConditionEntry(
         condition=raw["condition"],
@@ -198,6 +254,11 @@ def _build_condition(raw: dict, ctx: str) -> ConditionEntry:
         overturn_support_factors=_str_tuple(raw.get("overturn_support_factors")),
         provenance=coerce_provenance(raw["provenance"], ctx),
         citations=parse_citations(raw.get("citations"), ctx),
+        # additive v0.3 — source typo 'servation_features' normalized to 'observation_features'
+        observation_features=_str_tuple(raw.get("observation_features", raw.get("servation_features"))),
+        inpatient_features=_str_tuple(raw.get("inpatient_features")),
+        gap_questions=_build_gap_questions(raw.get("gap_questions"), ctx),
+        documentation_phrases=_build_doc_phrases(raw.get("documentation_phrases"), ctx),
     )
 
 
@@ -225,10 +286,14 @@ def load_kb() -> KnowledgeBase:
 
 def all_entries(kb: KnowledgeBase) -> list:
     """Flat list of every provenance-bearing entry (for the provenance lint/tests)."""
-    return [
+    entries = [
         *kb.regulatory_state,
         *kb.gap_domains,
         *kb.override_factors,
         *kb.frailty_signals,
         *kb.conditions,
     ]
+    # Each DocumentationPhrase carries its own provenance + >=1 citation -> include for coverage.
+    for cond in kb.conditions:
+        entries.extend(cond.documentation_phrases)
+    return entries

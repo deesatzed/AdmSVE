@@ -1,0 +1,105 @@
+{
+  "condition": "dementia_trigger",
+  "aliases": [
+    "dementia behavior",
+    "dementia with trigger",
+    "behavioral dyscontrol dementia",
+    "agitation dementia"
+  ],
+  "si_thresholds": [
+    "acute behavior change from baseline",
+    "active medical trigger (infection, retention, pain)",
+    "unsafe agitation",
+    "poor oral or medication intake"
+  ],
+  "is_requirements": [
+    "serial reassessment",
+    "trigger-specific treatment",
+    "high nursing supervision with medical care"
+  ],
+  "two_midnight_expectation": "A brief resolved trigger with safe supervision may be observation-appropriate; medically triggered behavioral decompensation needing active treatment commonly supports an inpatient expectation. Separate medical necessity from custodial need.",
+  "denial_downgrade_triggers": [
+    "custodial language",
+    "no trigger search",
+    "caregiver capacity omitted"
+  ],
+  "overturn_support_factors": [
+    "active medical trigger documented",
+    "acute change from baseline behavior",
+    "treatment-requiring decompensation"
+  ],
+  "observation_features": [
+    "brief resolved trigger",
+    "safe caregiver supervision",
+    "returns to baseline behavior"
+  ],
+  "inpatient_features": [
+    "medically triggered behavioral decompensation needing active treatment"
+  ],
+  "gap_questions": [
+    {
+      "question": "What changed acutely from the dementia baseline?",
+      "gap_class": "documentation",
+      "targets_field": "cognitive_status"
+    },
+    {
+      "question": "Which medical trigger (infection, retention, pain) is active?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "labs"
+    },
+    {
+      "question": "Can home supervision safely manage the acute state?",
+      "gap_class": "geriatric_safety",
+      "targets_field": "social_support"
+    }
+  ],
+  "documentation_phrases": [
+    {
+      "phrase": "I expect medically necessary hospital care to span at least two midnights because the patient requires hospital-only services that cannot be safely delivered at a lower level of care.",
+      "requires_evidence_tokens": [
+        "trigger",
+        "infection",
+        "retention",
+        "acute change",
+        "baseline behavior"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_two_midnight",
+          "source": "CMS Two-Midnight Rule (public regulatory layer)",
+          "year": 2013,
+          "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+        }
+      ]
+    },
+    {
+      "phrase": "Lower-level care is not safe because the patient requires the hospital-only services documented above with ongoing reassessment.",
+      "requires_evidence_tokens": [
+        "trigger",
+        "infection",
+        "retention",
+        "acute change",
+        "baseline behavior"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_ur_482_30",
+          "source": "42 CFR 482.30 (hospital utilization review)",
+          "year": 2024,
+          "locator": "UR plan; medical necessity of admissions and continued stays"
+        }
+      ]
+    }
+  ],
+  "provenance": "derived_concept",
+  "citations": [
+    {
+      "ref_id": "cms_two_midnight",
+      "source": "CMS Two-Midnight Rule (public regulatory layer)",
+      "year": 2013,
+      "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+    }
+  ]
+}

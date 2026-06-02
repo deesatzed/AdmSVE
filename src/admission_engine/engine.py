@@ -156,6 +156,8 @@ class AdmissionStatusEngine:
                     "kb_version": gap_verdict.kb_version,
                     "condition_matched": gap_verdict.condition_matched,
                     "domain_gap_count": len(gap_verdict.domain_gaps),
+                    "condition_gap_question_count": gap_verdict.condition_gap_question_count,
+                    "doc_phrase_count": gap_verdict.doc_phrase_count,
                     "seed_action_count": len(gap_seed_actions),
                     "honest_negative_signals": gap_verdict.honest_negative_signals,
                 },

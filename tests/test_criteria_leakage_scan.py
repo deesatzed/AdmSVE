@@ -27,6 +27,12 @@ def test_kb_dir_has_no_criteria_text():
     assert findings == [], f"criteria trademark leaked into KB: {findings}"
 
 
+def test_disease_modules_have_no_criteria_text():
+    conditions_dir = SRC / "admission_engine" / "kb" / "data" / "conditions"
+    findings = scan_path(conditions_dir)
+    assert findings == [], f"criteria trademark leaked into disease modules: {findings}"
+
+
 def test_scanner_ignores_benign_surnames_but_catches_trademarks():
     """The boundary-aware scanner must not false-positive on surnames like McGarry."""
     from admission_engine.leakage_scan import _MARKER_RE

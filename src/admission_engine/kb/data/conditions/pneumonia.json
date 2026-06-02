@@ -1,0 +1,110 @@
+{
+  "condition": "pneumonia",
+  "aliases": [
+    "pneumonia",
+    "cap",
+    "community-acquired pneumonia",
+    "aspiration pneumonia",
+    "lung infection"
+  ],
+  "si_thresholds": [
+    "ambulatory desaturation",
+    "tachypnea",
+    "sepsis physiology or rising lactate",
+    "acute kidney injury",
+    "delirium"
+  ],
+  "is_requirements": [
+    "supplemental oxygen",
+    "intravenous antibiotics beyond first dose",
+    "serial vitals and labs",
+    "swallow or aspiration monitoring"
+  ],
+  "two_midnight_expectation": "Variable; stable patients tolerating oral therapy may be observation-appropriate, while hypoxemia, delirium, or ongoing intravenous support commonly support an inpatient expectation.",
+  "denial_downgrade_triggers": [
+    "one intravenous antibiotic dose only",
+    "no ambulatory oxygen data",
+    "social factors not linked to medical risk"
+  ],
+  "overturn_support_factors": [
+    "ambulatory desaturation documented",
+    "delirium or functional decline tied to the infection",
+    "ongoing intravenous support need"
+  ],
+  "observation_features": [
+    "room-air and ambulation oxygen stability",
+    "oral antibiotics feasible",
+    "improving vitals"
+  ],
+  "inpatient_features": [
+    "oxygen or intravenous support beyond a short stay",
+    "unsafe oral intake",
+    "serial reassessment need"
+  ],
+  "gap_questions": [
+    {
+      "question": "Does the patient desaturate when walking?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "current_visit.ambulatory_oxygen"
+    },
+    {
+      "question": "Can the patient take oral antibiotics and nutrition safely?",
+      "gap_class": "geriatric_safety",
+      "targets_field": "current_visit.po_status"
+    },
+    {
+      "question": "Has delirium resolved or is it an acute change from baseline?",
+      "gap_class": "documentation",
+      "targets_field": "cognitive_status"
+    }
+  ],
+  "documentation_phrases": [
+    {
+      "phrase": "I expect medically necessary hospital care to span at least two midnights because the patient requires hospital-only services that cannot be safely delivered at a lower level of care.",
+      "requires_evidence_tokens": [
+        "desaturation",
+        "delirium",
+        "intravenous",
+        "oxygen",
+        "sepsis"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_two_midnight",
+          "source": "CMS Two-Midnight Rule (public regulatory layer)",
+          "year": 2013,
+          "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+        }
+      ]
+    },
+    {
+      "phrase": "Lower-level care is not safe because the patient requires the hospital-only services documented above with ongoing reassessment.",
+      "requires_evidence_tokens": [
+        "desaturation",
+        "delirium",
+        "intravenous",
+        "oxygen",
+        "sepsis"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_ur_482_30",
+          "source": "42 CFR 482.30 (hospital utilization review)",
+          "year": 2024,
+          "locator": "UR plan; medical necessity of admissions and continued stays"
+        }
+      ]
+    }
+  ],
+  "provenance": "derived_concept",
+  "citations": [
+    {
+      "ref_id": "cms_two_midnight",
+      "source": "CMS Two-Midnight Rule (public regulatory layer)",
+      "year": 2013,
+      "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+    }
+  ]
+}

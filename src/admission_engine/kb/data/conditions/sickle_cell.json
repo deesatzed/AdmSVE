@@ -1,0 +1,107 @@
+{
+  "condition": "sickle_cell",
+  "aliases": [
+    "sickle cell",
+    "sickle cell crisis",
+    "vaso-occlusive crisis",
+    "acute chest syndrome"
+  ],
+  "si_thresholds": [
+    "persistent severe pain after repeated dosing",
+    "hypoxemia",
+    "fever",
+    "acute chest syndrome concern",
+    "severe anemia"
+  ],
+  "is_requirements": [
+    "repeated intravenous analgesia",
+    "oxygen",
+    "transfusion planning",
+    "serial reassessment"
+  ],
+  "two_midnight_expectation": "Pain responding clearly to a protocolized regimen may be observation-appropriate; uncontrolled pain or complication risk commonly supports an inpatient expectation.",
+  "denial_downgrade_triggers": [
+    "partial pain improvement not clarified",
+    "no complication screening documented"
+  ],
+  "overturn_support_factors": [
+    "uncontrolled pain after repeated dosing",
+    "hypoxemia or chest findings",
+    "transfusion or complication need"
+  ],
+  "observation_features": [
+    "clear pain response",
+    "no pulmonary concern",
+    "stable reassessment"
+  ],
+  "inpatient_features": [
+    "ongoing intravenous analgesia",
+    "complication monitoring"
+  ],
+  "gap_questions": [
+    {
+      "question": "Are additional intravenous analgesia doses required?",
+      "gap_class": "treatment_escalation",
+      "targets_field": "current_visit.analgesia_doses"
+    },
+    {
+      "question": "Is there hypoxemia or chest symptoms?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "current_visit.respiratory"
+    },
+    {
+      "question": "Is transfusion or acute chest syndrome a concern?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "labs"
+    }
+  ],
+  "documentation_phrases": [
+    {
+      "phrase": "I expect medically necessary hospital care to span at least two midnights because the patient requires hospital-only services that cannot be safely delivered at a lower level of care.",
+      "requires_evidence_tokens": [
+        "analgesia",
+        "hypoxemia",
+        "chest syndrome",
+        "transfusion",
+        "anemia"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_two_midnight",
+          "source": "CMS Two-Midnight Rule (public regulatory layer)",
+          "year": 2013,
+          "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+        }
+      ]
+    },
+    {
+      "phrase": "Lower-level care is not safe because the patient requires the hospital-only services documented above with ongoing reassessment.",
+      "requires_evidence_tokens": [
+        "analgesia",
+        "hypoxemia",
+        "chest syndrome",
+        "transfusion",
+        "anemia"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_ur_482_30",
+          "source": "42 CFR 482.30 (hospital utilization review)",
+          "year": 2024,
+          "locator": "UR plan; medical necessity of admissions and continued stays"
+        }
+      ]
+    }
+  ],
+  "provenance": "derived_concept",
+  "citations": [
+    {
+      "ref_id": "cms_two_midnight",
+      "source": "CMS Two-Midnight Rule (public regulatory layer)",
+      "year": 2013,
+      "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+    }
+  ]
+}

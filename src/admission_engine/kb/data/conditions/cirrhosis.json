@@ -1,0 +1,106 @@
+{
+  "condition": "cirrhosis",
+  "aliases": [
+    "cirrhosis",
+    "decompensated cirrhosis",
+    "ascites",
+    "hepatic encephalopathy",
+    "liver failure"
+  ],
+  "si_thresholds": [
+    "hepatic encephalopathy",
+    "spontaneous bacterial peritonitis concern",
+    "gastrointestinal bleeding",
+    "acute kidney injury or hepatorenal concern",
+    "hyponatremia"
+  ],
+  "is_requirements": [
+    "diagnostic paracentesis",
+    "intravenous albumin or antibiotics",
+    "serial renal and mental-status checks",
+    "lactulose titration"
+  ],
+  "two_midnight_expectation": "A rapidly improving minor presentation may be observation-appropriate; a named decompensating complication with active therapy commonly supports an inpatient expectation.",
+  "denial_downgrade_triggers": [
+    "generic cirrhosis wording",
+    "no paracentesis or complication-specific plan"
+  ],
+  "overturn_support_factors": [
+    "named decompensating complication",
+    "active complication-directed therapy",
+    "serial reassessment need"
+  ],
+  "observation_features": [
+    "minor symptoms with rapid resolution",
+    "no major complication identified"
+  ],
+  "inpatient_features": [
+    "named decompensating complication with active therapy"
+  ],
+  "gap_questions": [
+    {
+      "question": "Is there SBP, encephalopathy, or AKI?",
+      "gap_class": "diagnostic_clarification",
+      "targets_field": "labs"
+    },
+    {
+      "question": "Is paracentesis, albumin, or antibiotics required?",
+      "gap_class": "treatment_escalation",
+      "targets_field": "current_visit.complication_plan"
+    },
+    {
+      "question": "Can mentation and medications be managed safely at home?",
+      "gap_class": "geriatric_safety",
+      "targets_field": "social_support"
+    }
+  ],
+  "documentation_phrases": [
+    {
+      "phrase": "I expect medically necessary hospital care to span at least two midnights because the patient requires hospital-only services that cannot be safely delivered at a lower level of care.",
+      "requires_evidence_tokens": [
+        "encephalopathy",
+        "peritonitis",
+        "paracentesis",
+        "hepatorenal",
+        "albumin"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_two_midnight",
+          "source": "CMS Two-Midnight Rule (public regulatory layer)",
+          "year": 2013,
+          "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+        }
+      ]
+    },
+    {
+      "phrase": "Lower-level care is not safe because the patient requires the hospital-only services documented above with ongoing reassessment.",
+      "requires_evidence_tokens": [
+        "encephalopathy",
+        "peritonitis",
+        "paracentesis",
+        "hepatorenal",
+        "albumin"
+      ],
+      "provenance": "cms_public",
+      "citations": [
+        {
+          "ref_id": "cms_ur_482_30",
+          "source": "42 CFR 482.30 (hospital utilization review)",
+          "year": 2024,
+          "locator": "UR plan; medical necessity of admissions and continued stays"
+        }
+      ]
+    }
+  ],
+  "provenance": "derived_concept",
+  "citations": [
+    {
+      "ref_id": "cms_two_midnight",
+      "source": "CMS Two-Midnight Rule (public regulatory layer)",
+      "year": 2013,
+      "locator": "42 CFR 482.30; reasonable-expectation medical-necessity standard"
+    }
+  ]
+}

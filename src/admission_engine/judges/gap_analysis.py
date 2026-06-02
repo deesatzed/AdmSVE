@@ -21,7 +21,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from ..kb import KB_VERSION, FrailtySignal, GapDomain, KnowledgeBase, load_kb
+from ..kb import (
+    KB_VERSION,
+    ConditionEntry,
+    FrailtySignal,
+    GapDomain,
+    KnowledgeBase,
+    load_kb,
+)
 from ..output.tiered_output import (
     STRENGTH_BORDERLINE,
     STRENGTH_CLEAR,
@@ -44,6 +51,8 @@ class GapAnalysisVerdict:
     # Tier-2 candidate actions seeded by frailty signals. These do NOT bypass the integrity gate —
     # the engine appends them to the recommender's candidate actions and they must pass the gate.
     seed_actions: list[RecommendedAction] = field(default_factory=list)
+    condition_gap_question_count: int = 0
+    doc_phrase_count: int = 0
 
 
 # Decision-time fields a frailty signal may read. All are point-of-admission facts (no leakage).
@@ -105,6 +114,18 @@ class GapAnalysisJudge:
         domain_gaps.extend(frailty_gaps)
         honest_negative_signals.extend(frailty_negatives)
 
+        # Condition-specific gap-question + documentation-phrase pass (Tier-1 documentation only).
+        cond_gap_q = 0
+        doc_phrase_n = 0
+        if condition is not None:
+            gq_items = self._condition_gap_questions(condition, already_documented)
+            dp_items = self._condition_doc_phrases(condition, case_view)
+            domain_gaps.extend(gq_items)
+            domain_gaps.extend(dp_items)
+            cond_gap_q = len(gq_items)
+            doc_phrase_n = len(dp_items)
+            self._condition_obs_signal(condition, case_view, honest_negative_signals)
+
         return GapAnalysisVerdict(
             case_id=case_id,
             judge_id=self.judge_id,
@@ -115,7 +136,68 @@ class GapAnalysisJudge:
             honest_negative_signals=honest_negative_signals,
             rationale=rationale,
             seed_actions=seed_actions,
+            condition_gap_question_count=cond_gap_q,
+            doc_phrase_count=doc_phrase_n,
         )
+
+    def _condition_gap_questions(
+        self, condition: ConditionEntry, already: set[str]
+    ) -> list[OutputItem]:
+        """Surface the matched condition's gap-questions as Tier-1 documentation-of-existing-fact
+        prompts ('what to clarify in the record'). Never new care, never a status assertion."""
+        items: list[OutputItem] = []
+        cite = condition.citations[0].ref_id if condition.citations else ""
+        for q in condition.gap_questions:  # stable KB load order
+            if any(q.question.lower() in g for g in already):
+                continue  # already captured -> dedup
+            items.append(
+                OutputItem(
+                    tier=1,
+                    text=f"Clarify in record: {q.question}",
+                    source_tag="documentation_of_existing_fact",
+                    basis=f"condition gap-question ({condition.condition}/{q.gap_class}; KB cite {cite})",
+                    supporting_evidence=([f"targets:{q.targets_field}"] if q.targets_field else []),
+                    strength=STRENGTH_MODERATE,
+                )
+            )
+        return items
+
+    def _condition_doc_phrases(
+        self, condition: ConditionEntry, case_view: dict[str, Any]
+    ) -> list[OutputItem]:
+        """Emit a suggested documentation phrase ONLY when its required evidence tokens already
+        overlap the decision-time record (no fabrication). Each phrase carries its own citation."""
+        items: list[OutputItem] = []
+        for phrase in condition.documentation_phrases:  # stable KB load order
+            matched = _matched_fields(case_view, list(phrase.requires_evidence_tokens))
+            if not matched:
+                continue  # no evidentiary overlap -> suppress (no fabrication)
+            cite = phrase.citations[0].ref_id if phrase.citations else ""
+            items.append(
+                OutputItem(
+                    tier=1,
+                    text=f"Suggested documentation: {phrase.phrase}",
+                    source_tag="documentation_of_existing_fact",
+                    basis=f"condition doc-phrase ({condition.condition}; {phrase.provenance.value}; KB cite {cite})",
+                    supporting_evidence=matched,
+                    strength=_strength(len(matched)),
+                )
+            )
+        return items
+
+    def _condition_obs_signal(
+        self, condition: ConditionEntry, case_view: dict[str, Any], negatives: list[str]
+    ) -> None:
+        """If observation_features overlap the record but inpatient_features do NOT, record an
+        honest-negative observation-lean signal. Never moves status; informational only.
+
+        Conservative by design: any token collision between the obs and inpatient feature lists
+        suppresses the signal. That fails SAFE — under-claiming observation-lean never inflates
+        status; it only omits an honest-negative hint."""
+        obs = _matched_fields(case_view, list(condition.observation_features))
+        ip = _matched_fields(case_view, list(condition.inpatient_features))
+        if obs and not ip:
+            negatives.append(f"condition_observation_lean:{condition.condition}")
 
     def _frailty_pass(
         self, case_view: dict[str, Any]

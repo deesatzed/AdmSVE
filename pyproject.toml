@@ -19,6 +19,10 @@ redaction-model-mlx = ["openmed[mlx]>=0.1"]
 # MCP-backed redaction (calls an external redaction MCP server, e.g. RedaktR). The heavy pipeline
 # runs as a separate gated service; we only need an MCP client transport here.
 redaction-mcp = ["mcp>=0.9"]
+# Cloud LLM backend (OpenRouter / Anthropic via HTTP). The stub backend needs nothing.
+llm = ["httpx>=0.27"]
+# Localhost clinician app surface.
+app = ["fastapi>=0.110", "uvicorn>=0.27"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]

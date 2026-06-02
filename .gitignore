@@ -7,3 +7,7 @@ artifacts/
 .venv/
 venv/
 .DS_Store
+# Secrets — never commit real keys. Only .env.example (placeholders) is tracked.
+.env
+.env.local
+.env.*.local

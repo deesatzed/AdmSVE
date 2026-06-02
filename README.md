@@ -9,6 +9,32 @@ This is a Phase-1 greenfield build. It touches **no real PHI/claims**, embeds **
 InterQual/MCG criteria text**, and affects **no live case**. Everything runs on **synthetic
 fixtures**.
 
+## Clinician workflow app (local, AI-enabled)
+
+A localhost FastAPI app drives the 7-step disposition workflow:
+
+```bash
+pip install -e ".[app,llm]"            # fastapi/uvicorn + httpx (cloud LLM); stub backend needs nothing
+cp .env.example .env                   # set ADMISSION_ENGINE_LLM_PROVIDER + your model id + key
+python -m admission_engine.app.server  # http://127.0.0.1:8000
+```
+
+Flow: paste decision-time clinical info → **PHI redacted locally (before any LLM)** → app shows the
+redacted packet + which OpenEvidence dotflow to run (e.g. `.ed_admit_dc`) → run it in OE → paste OE's
+**prose** answer back (no JSON either direction) → app returns the inpatient-LOS support output
+(Tier-1 under-documented necessity, Tier-2 already-indicated workup, Tier-3 honest negative) plus a
+**suppressed-actions log** (items that help status but aren't independently indicated — never
+recommended).
+
+- **Model + key from `.env`** — you select all model versions; nothing hardcoded. `.env` is
+  gitignored. Provider = `stub` (default, deterministic, no key) | `openrouter` | `anthropic`.
+- **Integrity gate stays enforced in code** — even on the LLM/AI path, status-helping-but-not-
+  independently-indicated actions are suppressed + logged. The FCA guardrail does not depend on the
+  LLM behaving.
+- **Redaction runs before the LLM**; a cloud LLM may only receive raw PHI inside the approved §8
+  environment (gated). LLM-scored outputs are non-deterministic and labelled as such; the
+  deterministic engine remains the test/audit backstop.
+
 ## What it does (pipeline)
 
 ```

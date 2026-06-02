@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admission Status — Clinician Workflow</title>
+  <style>
+    body { font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif; margin:0; color:#17202a; background:#fafbfc; }
+    .stamp { position:sticky; top:0; background:#7b241c; color:#fff; padding:8px 16px; font-weight:700; font-size:13px; z-index:10; }
+    main { max-width:980px; margin:0 auto; padding:24px; }
+    h1 { margin:8px 0; }
+    .step { border:1px solid #d6dde4; border-radius:8px; margin:14px 0; padding:14px 16px; background:#fff; }
+    .step h2 { margin:0 0 8px; font-size:16px; }
+    textarea { width:100%; min-height:120px; font-family:ui-monospace,Menlo,monospace; font-size:13px; padding:8px; box-sizing:border-box; }
+    input, select { padding:6px 8px; font-size:14px; margin-right:8px; }
+    button { background:#1b4f72; color:#fff; border:0; padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600; }
+    button:disabled { background:#aab; cursor:not-allowed; }
+    pre { background:#f4f6f8; padding:10px; border-radius:6px; overflow:auto; font-size:12px; }
+    .tier { border-left:3px solid #1b4f72; padding:6px 10px; margin:6px 0; }
+    .tier.t3 { border-color:#1b7837; }
+    .suppressed { border-left:3px solid #a33; padding:6px 10px; margin:6px 0; background:#fdf3f3; font-size:13px; }
+    .muted { color:#777; font-size:13px; }
+    .pill { display:inline-block; padding:2px 8px; border-radius:10px; background:#e8eef5; font-size:12px; font-weight:700; }
+    .copy { background:#34495e; }
+  </style>
+</head>
+<body>
+  <div class="stamp">ADJUNCT DECISION SUPPORT — not a status determination · not patient-facing · status accuracy, never inflation</div>
+  <main>
+    <h1>Admission Status — Clinician Workflow</h1>
+    <p class="muted">Paste decision-time clinical info → the app redacts PHI locally → you run the OpenEvidence dotflow → paste OE's prose back → the app surfaces what would support inpatient level of service (and says observation when that's the honest answer).</p>
+    <p class="muted">LLM backend: <span id="llm" class="pill">…</span> (set model/key in <code>.env</code>)</p>
+
+    <div class="step">
+      <h2>Step 2 — Paste all clinical info available at the disposition decision</h2>
+      <label>Plan type:
+        <select id="plan_type">
+          <option value="traditional_medicare">Traditional Medicare</option>
+          <option value="medicare_advantage">Medicare Advantage</option>
+          <option value="commercial">Commercial</option>
+          <option value="medicaid">Medicaid</option>
+        </select>
+      </label>
+      <input id="payer" placeholder="Payer name" value="Traditional Medicare">
+      <br><br>
+      <textarea id="clinical" placeholder="Paste history, current-visit data, notes, labs, imaging available at the decision moment…"></textarea>
+      <br><br>
+      <button onclick="runIntake()">Redact + Prepare OE packet</button>
+    </div>
+
+    <div class="step" id="oe_step" style="display:none">
+      <h2>Step 3–4 — Redacted packet → OpenEvidence</h2>
+      <p class="muted">PHI redacted locally. Paste this into OpenEvidence and run the dotflow trigger shown, then paste OE's prose answer below.</p>
+      <p>OE dotflow to run: <span id="trigger" class="pill"></span></p>
+      <button class="copy" onclick="copyPacket()">Copy redacted packet</button>
+      <span id="findings" class="muted"></span>
+      <pre id="packet"></pre>
+    </div>
+
+    <div class="step" id="paste_step" style="display:none">
+      <h2>Step 5–6 — Paste OpenEvidence's prose answer back</h2>
+      <textarea id="oe_prose" placeholder="Paste OE's prose assessment here (no JSON needed)…"></textarea>
+      <br><br>
+      <button onclick="runIngest()">Get inpatient-LOS support</button>
+    </div>
+
+    <div class="step" id="result_step" style="display:none">
+      <h2>Step 7 — What would support inpatient level of service</h2>
+      <p>Predicted status: <span id="status" class="pill"></span> &nbsp; likelihood: <span id="likelihood"></span></p>
+      <div id="result"></div>
+    </div>
+  </main>
+
+  <script>
+    let CASE = null;
+
+    fetch('/health').then(r=>r.json()).then(h=>{ document.getElementById('llm').textContent = h.llm_provider + ' / ' + h.llm_model; });
+
+    async function runIntake() {
+      const body = {
+        text: document.getElementById('clinical').value,
+        payer: document.getElementById('payer').value,
+        plan_type: document.getElementById('plan_type').value,
+        case_id: 'CASE-LOCAL'
+      };
+      const r = await fetch('/intake', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+      const d = await r.json();
+      CASE = d.case_snapshot;
+      document.getElementById('packet').textContent = d.oe_handoff.redacted_packet;
+      document.getElementById('trigger').textContent = d.oe_handoff.oe_dot_trigger;
+      document.getElementById('findings').textContent = 'Redaction findings: ' + JSON.stringify(d.case_snapshot ? (d.case_snapshot._findings||{}) : {});
+      document.getElementById('oe_step').style.display = 'block';
+      document.getElementById('paste_step').style.display = 'block';
+    }
+
+    function copyPacket() { navigator.clipboard.writeText(document.getElementById('packet').textContent); }
+
+    async function runIngest() {
+      const body = { case_snapshot: CASE, oe_prose: document.getElementById('oe_prose').value };
+      const r = await fetch('/ingest-oe', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+      const d = await r.json();
+      document.getElementById('status').textContent = d.predicted_status;
+      document.getElementById('likelihood').textContent = d.inpatient_likelihood;
+      const out = d.output;
+      let html = '';
+      html += section('Tier 1 — Documentation of existing necessity (capture this)', out.documentation_gaps, 'tier');
+      html += section('Tier 2 — Already-indicated workup (indicated anyway)', out.indicated_pending_workup, 'tier');
+      if (out.honest_negative) html += '<div class="tier t3"><strong>Honest negative:</strong> ' + esc(out.honest_negative.text) + '</div>';
+      if (d.suppressed_actions && d.suppressed_actions.length) {
+        html += '<h3>Suppressed (helps status but not independently indicated — NOT recommended)</h3>';
+        d.suppressed_actions.forEach(s => { html += '<div class="suppressed">' + esc(s.description) + ' — <em>' + esc(s.reason) + '</em></div>'; });
+      }
+      html += '<p class="muted">OE parse: ' + esc(d.oe_parse.status) + ' · model: ' + esc(d.oe_parse.llm.provider+'/'+d.oe_parse.llm.model) + ' · prose hash: ' + esc(d.oe_parse.raw_prose_hash.slice(0,12)) + '…</p>';
+      html += '<p class="muted">' + esc(d.use_limitation) + '</p>';
+      document.getElementById('result').innerHTML = html;
+      document.getElementById('result_step').style.display = 'block';
+    }
+
+    function section(title, items, cls) {
+      if (!items || !items.length) return '<h3>' + esc(title) + '</h3><p class="muted">none</p>';
+      let h = '<h3>' + esc(title) + '</h3>';
+      items.forEach(i => { h += '<div class="'+cls+'">' + esc(i.text) + ' <span class="muted">[' + esc(i.source_tag) + ' · ' + esc(i.strength) + ']</span></div>'; });
+      return h;
+    }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  </script>
+</body>
+</html>

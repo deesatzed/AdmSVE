@@ -13,10 +13,16 @@ CLAUDE.md, the docs). The scan therefore distinguishes:
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 # Bare trademark tokens (detection only — no criteria CONTENT is stored anywhere).
 CRITERIA_MARKERS = ["interqual", "mcg", "milliman"]
+
+# Match each marker as a WHOLE WORD (word boundaries), case-insensitive. This avoids false positives
+# from benign substrings — e.g. the surname "McGarry" contains "mcg" but is not the MCG trademark —
+# while still catching the standalone trademark and forms like "MCG/Milliman" or "MCG criteria".
+_MARKER_RE = re.compile(r"\b(" + "|".join(re.escape(m) for m in CRITERIA_MARKERS) + r")\b", re.I)
 
 # Files/dirs permitted to name the trademarks because their job is to forbid/Scan/document them.
 ALLOWED_BASENAMES = {
@@ -27,7 +33,11 @@ ALLOWED_BASENAMES = {
     "PRE_REGISTRATION.md",
     "OPEN_DECISIONS.md",
     "test_criteria_leakage_scan.py",
+    "test_kb_provenance.py",
     "payer_routing.py",
+    # KB firewall files: their docstrings necessarily name the trademarks to declare that the
+    # proprietary InterQual-ISD/MCG element lists were deliberately NOT ingested.
+    "provenance.py",
 }
 
 SCAN_SUFFIXES = {".py", ".json", ".md", ".txt", ".html", ".log"}
@@ -47,10 +57,9 @@ def scan_path(root: Path) -> list[dict[str, str]]:
         if path.name in ALLOWED_BASENAMES:
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore").lower()
+            text = path.read_text(encoding="utf-8", errors="ignore")
         except OSError:
             continue
-        for marker in CRITERIA_MARKERS:
-            if marker in text:
-                findings.append({"path": str(path), "marker": marker})
+        for match in _MARKER_RE.finditer(text):
+            findings.append({"path": str(path), "marker": match.group(1).lower()})
     return findings

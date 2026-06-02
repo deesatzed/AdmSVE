@@ -32,6 +32,9 @@ def test_trace_records_pinned_versions():
     assert adj["criteria_version"]
     assert adj["cms_rule_effective_date"]
     assert events["case_loaded"]["data"]["engine_version"]
+    # KB version is pinned in the trace alongside the engine/criteria versions.
+    assert events["case_loaded"]["data"]["kb_version"] == "admission_engine.kb.v0.2"
+    assert events["gap_analysis"]["data"]["kb_version"] == "admission_engine.kb.v0.2"
 
 
 def test_trace_hash_chain_verifies():

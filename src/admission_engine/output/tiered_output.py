@@ -132,6 +132,7 @@ def build_tiered_output(
     status_verdict: StatusVerdict,
     gate_decision: GateDecision,
     case_view: dict[str, Any] | None = None,
+    gap_items: list[OutputItem] | None = None,
 ) -> TieredOutput:
     case_view = case_view or {}
     case_id = recommendation.case_id
@@ -177,6 +178,12 @@ def build_tiered_output(
                     strength=criteria_strength,
                 )
             )
+
+    # Tier 1 (cont.): KB-driven gap-analysis items. These are pre-built documentation-of-existing-fact
+    # items; enforce the Tier-1 / no-new-care invariant on the way in (status accuracy, never inflation).
+    for item in gap_items or []:
+        if item.tier == 1 and item.source_tag == "documentation_of_existing_fact":
+            out.documentation_gaps.append(item)
 
     # Tier 2: already-indicated pending workup (surfaced new-care actions that passed the gate).
     for action in gate_decision.surfaced:

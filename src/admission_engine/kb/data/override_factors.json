@@ -1,0 +1,47 @@
+[
+  {
+    "factor": "difficulty_with_5_adls",
+    "direction": "increases_admission",
+    "odds_ratio": 1.47,
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al.)", "year": 2023, "locator": "functional status OR 1.47"}
+    ]
+  },
+  {
+    "factor": "cognitive_impairment_dementia",
+    "direction": "increases_admission",
+    "odds_ratio": 1.23,
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al.)", "year": 2023, "locator": "dementia OR 1.23"}
+    ]
+  },
+  {
+    "factor": "lives_with_spouse",
+    "direction": "decreases_admission",
+    "odds_ratio": 0.84,
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al.)", "year": 2023, "locator": "social support OR 0.84"}
+    ]
+  },
+  {
+    "factor": "children_within_10_miles",
+    "direction": "decreases_admission",
+    "odds_ratio": 0.80,
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al.)", "year": 2023, "locator": "social support OR 0.80"}
+    ]
+  },
+  {
+    "factor": "icu_stepdown_bed_availability",
+    "direction": "influences_triage",
+    "odds_ratio": 3.22,
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "nates_2016", "source": "Critical Care Medicine (Nates et al., ICU admission/discharge/triage guidelines)", "year": 2016, "locator": "bed availability OR 3.22"}
+    ]
+  }
+]

@@ -19,6 +19,7 @@ from typing import Any, Callable
 from uuid import UUID
 
 from . import CRITERIA_INTERFACE_VERSION, ENGINE_VERSION
+from .kb import KB_VERSION
 from .contracts.case_snapshot import (
     assert_no_leakage,
     recommender_visible_view,
@@ -27,6 +28,7 @@ from .contracts.case_snapshot import (
 from .contracts.truth import parse_truth
 from .integrity_gate.gate import GateDecision, IntegrityGate
 from .judges.clinical_indication import ClinicalIndicationJudge
+from .judges.gap_analysis import GapAnalysisJudge
 from .judges.status_conformance import StatusConformanceJudge
 from .metrics.harness import CaseResult
 from .output.tiered_output import TieredOutput, build_tiered_output
@@ -75,12 +77,16 @@ class AdmissionStatusEngine:
         recommender: Recommender | None = None,
         leave_oe_out: bool = False,
         deterministic_trace: bool = True,
+        enable_gap_analysis: bool = True,
     ) -> None:
         self.recommender = recommender or MockOpenEvidenceRecommender()
         self.status_judge = StatusConformanceJudge()
         self.gate = IntegrityGate(ClinicalIndicationJudge(leave_oe_out=leave_oe_out))
         self.leave_oe_out = leave_oe_out
         self.deterministic_trace = deterministic_trace
+        # KB-driven gap analysis. Flag exists so callers can A/B that it never inflates status.
+        self.enable_gap_analysis = enable_gap_analysis
+        self.gap_judge = GapAnalysisJudge() if enable_gap_analysis else None
 
     def run_case(self, payload: dict[str, Any]) -> EngineOutcome:
         case_id = payload.get("case_id", "")
@@ -103,7 +109,9 @@ class AdmissionStatusEngine:
                 "case_id": case_id,
                 "engine_version": ENGINE_VERSION,
                 "criteria_interface_version": CRITERIA_INTERFACE_VERSION,
+                "kb_version": KB_VERSION,
                 "leave_oe_out": self.leave_oe_out,
+                "enable_gap_analysis": self.enable_gap_analysis,
                 "plan_type": payload.get("plan_type", ""),
             },
         )
@@ -133,7 +141,30 @@ class AdmissionStatusEngine:
             },
         )
 
-        gate_decision = self.gate.filter_actions(case_view, recommendation.candidate_actions)
+        # KB-driven gap analysis (after status adjudication; documentation-of-existing-fact only).
+        gap_items = []
+        gap_seed_actions = []
+        if self.gap_judge is not None:
+            gap_verdict = self.gap_judge.evaluate(case_view)
+            gap_items = gap_verdict.domain_gaps
+            gap_seed_actions = gap_verdict.seed_actions
+            trace.add(
+                "gap_analysis",
+                {
+                    "judge_id": gap_verdict.judge_id,
+                    "judge_version": gap_verdict.judge_version,
+                    "kb_version": gap_verdict.kb_version,
+                    "condition_matched": gap_verdict.condition_matched,
+                    "domain_gap_count": len(gap_verdict.domain_gaps),
+                    "seed_action_count": len(gap_seed_actions),
+                    "honest_negative_signals": gap_verdict.honest_negative_signals,
+                },
+            )
+
+        # Frailty-seeded Tier-2 actions join the recommender's candidates and pass through the SAME
+        # integrity gate — no bypass. They cannot affect predicted status or likelihood.
+        candidate_actions = list(recommendation.candidate_actions) + gap_seed_actions
+        gate_decision = self.gate.filter_actions(case_view, candidate_actions)
         trace.add(
             "integrity_gate",
             {
@@ -143,7 +174,9 @@ class AdmissionStatusEngine:
             },
         )
 
-        output = build_tiered_output(recommendation, status_verdict, gate_decision, case_view)
+        output = build_tiered_output(
+            recommendation, status_verdict, gate_decision, case_view, gap_items=gap_items
+        )
         trace.add(
             "tiered_output",
             {

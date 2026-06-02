@@ -1,0 +1,79 @@
+[
+  {
+    "signal": "adl_dependency",
+    "decision_time_field": "adl_dependencies",
+    "under_documentation_gap": "New or acute dependence in activities of daily living is present but not captured as an objective finding tied to medical necessity (why safe care cannot be delivered at a lower level).",
+    "predicts": "New ADL dependence is independently associated with higher admission likelihood and with prolonged stay and need for post-acute coordination; it is a documentable functional finding, not a status lever.",
+    "necessity_link_required": false,
+    "independently_indicated_actions": [
+      "Physical/occupational therapy functional and safe-discharge assessment",
+      "Care-management disposition planning"
+    ],
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al., functional status, cognition, social support and ED admission)", "year": 2023, "locator": "ADL dependence and admission"},
+      {"ref_id": "studenski_2011", "source": "JAMA (Studenski et al., gait speed and survival in older adults)", "year": 2011, "locator": "gait speed under 0.8 m/s"}
+    ]
+  },
+  {
+    "signal": "cfs_band",
+    "decision_time_field": "cfs_score",
+    "under_documentation_gap": "A Clinical Frailty Scale finding (moderate-to-severe frailty) is present in the record but not documented as an objective finding supporting the expected hospital course.",
+    "predicts": "Higher Clinical Frailty Scale grades are associated, in a graded fashion, with increased mortality, prolonged length of stay, failed discharge, and post-acute care need; the score documents existing risk and does not by itself qualify a status.",
+    "necessity_link_required": false,
+    "independently_indicated_actions": [
+      "Geriatric co-management consultation",
+      "Falls-risk precautions and assessment"
+    ],
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "rockwood_2005", "source": "CMAJ (Rockwood et al., a global clinical measure of fitness and frailty in elderly people)", "year": 2005, "locator": "Clinical Frailty Scale derivation"},
+      {"ref_id": "kaeppeli_2020", "source": "Annals of Emergency Medicine (Kaeppeli et al., Clinical Frailty Scale and 30-day mortality in ED older adults)", "year": 2020, "locator": "ED validation"}
+    ]
+  },
+  {
+    "signal": "cognitive_status_delirium_risk",
+    "decision_time_field": "cognitive_status",
+    "under_documentation_gap": "Cognitive impairment or delirium risk is present but not documented as affecting the ability to self-manage therapy or to be safely cared for at a lower level.",
+    "predicts": "Cognitive impairment is independently associated with higher admission likelihood and elevated delirium risk requiring monitoring; it is a documentable finding, not a status lever.",
+    "necessity_link_required": false,
+    "independently_indicated_actions": [
+      "Delirium precautions and monitoring",
+      "Documented cognitive screen and capacity assessment"
+    ],
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al.)", "year": 2023, "locator": "cognitive impairment and admission"}
+    ]
+  },
+  {
+    "signal": "recent_admissions",
+    "decision_time_field": "recent_admissions",
+    "under_documentation_gap": "A recent-hospitalization / high-readmission-risk history is present but not documented as part of the expected hospital course and care-coordination need.",
+    "predicts": "Recent hospitalizations are associated with higher readmission risk and can support the physician's reasonable expectation of a medically necessary multi-midnight course when active care is still required; it is a documentation and expectation hook, not a status lever.",
+    "necessity_link_required": false,
+    "independently_indicated_actions": [
+      "Medication reconciliation",
+      "Transitional-care and follow-up coordination"
+    ],
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "cms_two_midnight", "source": "CMS Two-Midnight Rule (42 CFR 412.3; reasonable expectation of medically necessary care)", "year": 2013, "locator": "expectation based on complexity and recovery time"},
+      {"ref_id": "cms_snf_3day", "source": "CMS SNF three-day inpatient rule (42 CFR 409.30; patient-protection stake of accurate status)", "year": 2013, "locator": "qualifying inpatient stay"}
+    ]
+  },
+  {
+    "signal": "social_support",
+    "decision_time_field": "social_support",
+    "under_documentation_gap": "Absent caregiver support or unsafe home context is present, but it is NOT documented as preventing safe delivery of otherwise-needed medical care at a lower level. Social risk supports inpatient ONLY when it makes safe delivery of needed medical care impossible at a lower level; pure placement/disposition delay does not.",
+    "predicts": "Available social support lowers admission likelihood; its absence is a documentable risk but, on its own, does not establish medical necessity unless it prevents safe delivery of needed medical care.",
+    "necessity_link_required": true,
+    "independently_indicated_actions": [
+      "Social-work assessment linking the social barrier to a specific medical-care-delivery failure"
+    ],
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al., social support and ED admission)", "year": 2023, "locator": "spouse/children-nearby protective association"}
+    ]
+  }
+]

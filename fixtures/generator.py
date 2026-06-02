@@ -242,3 +242,58 @@ def write_corpus(out_dir: Path, n: int = 60) -> list[Path]:
         path.write_text(json.dumps(case, indent=2, sort_keys=True), encoding="utf-8")
         paths.append(path)
     return paths
+
+
+# ---------------------------------------------------------------------------
+# Frailty / geriatric-vulnerability / SDOH test builders.
+# These are NOT added to the default generate_corpus() so existing tests are unaffected;
+# frailty tests enrich cases explicitly via with_frailty().
+# ---------------------------------------------------------------------------
+
+# A non-trivial frailty field assignment used in invariance A/B tests.
+DEFAULT_FRAILTY = {
+    "cfs_score": 6,
+    "adl_dependencies": 3,
+    "cognitive_status": "mild_impairment",
+    "social_support": "limited",
+    "recent_admissions": 2,
+}
+
+
+def with_frailty(case: dict[str, Any], frailty: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Return a deep copy of case enriched with decision-time frailty fields in current_visit."""
+    import copy
+
+    out = copy.deepcopy(case)
+    out.setdefault("current_visit", {})
+    out["current_visit"].update(frailty if frailty is not None else DEFAULT_FRAILTY)
+    return out
+
+
+def _frailty_trap_case(idx: int) -> dict[str, Any]:
+    """Planted: a frailty-framed action that helps status but is NOT independently indicated."""
+    case = _honest_negative_case(idx)
+    case["case_id"] = f"SYN-FRAILTRAP-{idx:04d}"
+    case["presenting_problem"] = "elderly weakness and deconditioning"
+    case["current_visit"].update({"cfs_score": 6, "adl_dependencies": 3})
+    case["actions"] = [
+        {
+            "action_id": "a-frailty-trap-1",
+            "description": "Order observation labs framed as frailty workup solely to extend the stay",
+            "clinical_indication_tag": "not_independently_indicated",
+            "present": False,
+            "helps_status": True,
+            "guideline_indicated": False,
+            "oe_indicated": False,
+            "rationale": "would help status only; not clinically warranted",
+        }
+    ]
+    return case
+
+
+def _sdoh_only_case(idx: int) -> dict[str, Any]:
+    """A case with social risk but NO documented care-delivery linkage (must not be Tier-1 necessity)."""
+    case = _honest_negative_case(idx)
+    case["case_id"] = f"SYN-SDOH-{idx:04d}"
+    case["current_visit"].update({"social_support": "none"})  # no care_delivery_barrier_documented
+    return case

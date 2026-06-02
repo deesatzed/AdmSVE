@@ -54,6 +54,30 @@ def test_all_planted_non_indicated_actions_suppressed_100pct():
     )
 
 
+def test_planted_non_indicated_frailty_action_suppressed():
+    """A frailty-framed action that helps status but isn't independently indicated must be suppressed."""
+    from fixtures.generator import _frailty_trap_case
+
+    engine = AdmissionStatusEngine()
+    outcome = engine.run_case(_frailty_trap_case(0))
+    suppressed = {s.action_id: s for s in outcome.gate_decision.suppressed}
+    assert "a-frailty-trap-1" in suppressed
+    assert suppressed["a-frailty-trap-1"].reason == "status_helpful_but_not_independently_indicated"
+
+
+def test_legitimate_frailty_seed_actions_pass_gate():
+    """The KB-seeded frailty Tier-2 actions (PT/OT, geri co-management) are independently indicated."""
+    from fixtures.generator import with_frailty
+    from admission_engine.judges.gap_analysis import GapAnalysisJudge
+    from admission_engine.contracts.case_snapshot import recommender_visible_view
+
+    engine = AdmissionStatusEngine()
+    outcome = engine.run_case(with_frailty(_integrity_suppression_case(0)))
+    surfaced = {a.action_id for a in outcome.gate_decision.surfaced}
+    # at least one frailty seed action surfaced through the gate
+    assert any(aid.startswith("frailty-") for aid in surfaced)
+
+
 def test_gray_zone_is_suppressed_fail_closed():
     """Ensemble disagreement must suppress (fail closed)."""
     engine = AdmissionStatusEngine()

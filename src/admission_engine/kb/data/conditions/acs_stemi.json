@@ -1,0 +1,36 @@
+{
+  "condition": "acs_stemi",
+  "aliases": ["stemi", "acs", "acute coronary syndrome", "myocardial infarction", "heart attack", "nstemi", "nste-acs", "chest pain"],
+  "si_thresholds": [
+    "ST-segment elevation, ST depression, T-wave inversions, or dynamic ECG changes",
+    "elevated high-sensitivity troponin in appropriate clinical context",
+    "hemodynamic compromise (hypotension, cardiogenic shock)",
+    "ventricular tachycardia/fibrillation or high-grade AV block (notably with inferior MI)",
+    "mechanical complications (VSD, papillary muscle rupture, free wall rupture)"
+  ],
+  "is_requirements": [
+    "continuous telemetry monitoring for arrhythmia detection",
+    "serial cardiac biomarkers for diagnosis and risk stratification",
+    "invasive procedures (cardiac catheterization with PCI, or CABG)",
+    "intravenous medications (anticoagulation, nitroglycerin, inotropes/vasopressors if shock)",
+    "intensive nursing with post-PCI vascular access monitoring",
+    "post-procedure arrhythmia, bleeding, and contrast-nephropathy surveillance"
+  ],
+  "two_midnight_expectation": "STEMI typically 3-7 days; ACS patients usually cross two midnights. Troponin-negative low-risk chest pain may be an observation candidate; uncomplicated elective PCI may be under two midnights.",
+  "denial_downgrade_triggers": [
+    "troponin-negative chest pain without high-risk features",
+    "same-day discharge after elective (non-ACS) PCI",
+    "no documented complications or ongoing ischemia after procedure"
+  ],
+  "overturn_support_factors": [
+    "documented high-risk features (diabetes, renal insufficiency, multivessel disease, reduced EF, ongoing symptoms)",
+    "documented monitoring needs (arrhythmia risk, post-PCI vascular complications)",
+    "alignment with specialty guideline recommendations for monitoring duration by cardiac risk",
+    "any documented post-procedure complication justifying extended stay"
+  ],
+  "provenance": "peer_reviewed",
+  "citations": [
+    {"ref_id": "acc_aha_acs_2025", "source": "Journal of the American College of Cardiology (2025 ACC/AHA/ACEP/NAEMSP/SCAI Guideline for the Management of Patients With Acute Coronary Syndromes)", "year": 2025, "locator": "telemetry monitoring; risk stratification"},
+    {"ref_id": "bhatt_2022", "source": "JAMA (Bhatt et al., diagnosis and treatment of acute coronary syndromes: a review)", "year": 2022, "locator": ""}
+  ]
+}

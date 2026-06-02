@@ -21,6 +21,26 @@ def test_source_tree_has_no_criteria_text():
     assert findings == [], f"criteria trademark leaked into source: {findings}"
 
 
+def test_kb_dir_has_no_criteria_text():
+    kb_dir = SRC / "admission_engine" / "kb"
+    findings = scan_path(kb_dir)
+    assert findings == [], f"criteria trademark leaked into KB: {findings}"
+
+
+def test_scanner_ignores_benign_surnames_but_catches_trademarks():
+    """The boundary-aware scanner must not false-positive on surnames like McGarry."""
+    from admission_engine.leakage_scan import _MARKER_RE
+
+    def hits(s):
+        return [m.group(1).lower() for m in _MARKER_RE.finditer(s)]
+
+    assert hits("McGarry et al") == []
+    assert hits("Dr. Mcgrath") == []
+    assert "mcg" in hits("uses MCG criteria")
+    assert "interqual" in hits("InterQual ISD elements")
+    assert "milliman" in hits("Milliman guidelines")
+
+
 def test_generated_artifacts_have_no_criteria_text(tmp_path):
     engine = AdmissionStatusEngine()
     out = tmp_path / "artifacts"

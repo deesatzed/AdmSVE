@@ -1,0 +1,36 @@
+{
+  "condition": "syncope",
+  "aliases": ["syncope", "presyncope", "passed out", "loss of consciousness", "fainting"],
+  "si_thresholds": [
+    "abnormal ECG (arrhythmia, conduction abnormality, or ischemic changes)",
+    "elevated troponin in appropriate clinical context",
+    "structural heart disease",
+    "high-risk features: age over 60, no prodrome, exertional onset, family history of sudden death",
+    "injury from fall (head trauma, fracture, significant bleeding)",
+    "recurrent syncopal episodes",
+    "persistent orthostatic hypotension, bradycardia, or tachycardia"
+  ],
+  "is_requirements": [
+    "continuous telemetry monitoring for suspected arrhythmic etiology",
+    "serial troponins when cardiac etiology suspected",
+    "advanced diagnostics (echocardiography, stress testing, EP study, tilt-table)",
+    "medication adjustment with monitoring",
+    "fall-risk assessment with physical/occupational therapy"
+  ],
+  "two_midnight_expectation": "Highly variable; published validation found criteria predict stays over two midnights poorly in elderly syncope (sensitivity 60.8%, specificity 47.8%; median stay 32.6 hours). High-risk patients may require multi-day monitoring.",
+  "denial_downgrade_triggers": [
+    "vasovagal syncope with clear trigger and rapid recovery",
+    "single episode with normal ECG, normal troponin, no high-risk features",
+    "orthostatic hypotension without a cardiac etiology"
+  ],
+  "overturn_support_factors": [
+    "documented cardiac risk (abnormal ECG, structural disease, exertional onset, family history)",
+    "documented fall injury or recurrent falls with gait instability",
+    "age and frailty raising adverse-outcome risk and monitoring need",
+    "recurrent syncope or multiple ED visits indicating high readmission risk"
+  ],
+  "provenance": "peer_reviewed",
+  "citations": [
+    {"ref_id": "chang_2020", "source": "Journal of Emergency Medicine (Chang et al., accuracy of criteria for observation vs inpatient in older adults with syncope)", "year": 2020, "locator": "sensitivity 60.8% / specificity 47.8% for >2-midnight prediction"}
+  ]
+}

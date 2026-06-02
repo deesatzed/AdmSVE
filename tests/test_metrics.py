@@ -53,6 +53,33 @@ def test_equity_stratification_present():
     assert len(report.equity_by_payer) >= 1
 
 
+def _run_corpus_with(enable_gap_analysis):
+    engine = AdmissionStatusEngine(enable_gap_analysis=enable_gap_analysis)
+    results = []
+    for case in generate_corpus(60):
+        try:
+            outcome = engine.run_case(case)
+        except Exception:
+            continue
+        if outcome.case_result is not None:
+            results.append(outcome.case_result)
+    return results
+
+
+def test_gap_analysis_does_not_increase_over_call_rate():
+    """Status accuracy, never inflation: gap analysis must NOT raise over-call or flip any case."""
+    with_gap = _run_corpus_with(True)
+    without_gap = _run_corpus_with(False)
+    r_with = compute_metrics(with_gap)
+    r_without = compute_metrics(without_gap)
+    # Over-call rate must not increase.
+    assert r_with.over_call_rate <= r_without.over_call_rate
+    # And, more strictly, per-case predicted_inpatient must be identical (gap items are Tier-1 docs only).
+    by_id_with = {r.case_id: r.predicted_inpatient for r in with_gap}
+    by_id_without = {r.case_id: r.predicted_inpatient for r in without_gap}
+    assert by_id_with == by_id_without
+
+
 def test_denial_overturn_potential_is_retrospective():
     """Denied-then-overturned cases (initial denial, adjudicated inpatient) are detected, and the
     engine's surfaced documentation is credited toward overturn support. Initial payer denial is

@@ -1,0 +1,86 @@
+[
+  {
+    "key": "two_midnight_benchmark",
+    "summary": "Inpatient admission is generally appropriate when the admitting physician reasonably expects medically necessary hospital care to span at least two midnights, with the medical record supporting that expectation. Care expected to last under two midnights is generally observation/outpatient.",
+    "effective": "2013-10 (established); reaffirmed CY2026",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "cms_two_midnight", "source": "CMS Two-Midnight Rule (public regulatory layer)", "year": 2013, "locator": "benchmark + presumption"},
+      {"ref_id": "poon_2021", "source": "Health Affairs (Poon et al., Two-Midnight Rule and observation stays)", "year": 2021, "locator": ""}
+    ]
+  },
+  {
+    "key": "case_by_case_exception",
+    "summary": "A case-by-case exception permits inpatient status for stays expected to be under two midnights when documented complex factors (history/comorbidities, severity of signs and symptoms, current medical needs, risk of adverse event) make inpatient-level care medically necessary.",
+    "effective": "CY2026",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "locke_2015", "source": "Journal of Hospital Medicine (Locke et al., changes to inpatient vs outpatient hospitalization)", "year": 2015, "locator": ""}
+    ]
+  },
+  {
+    "key": "inpatient_only_list_phaseout",
+    "summary": "CMS finalized a three-year phase-out of the Inpatient-Only list beginning CY2026, removing roughly 285 procedures (primarily musculoskeletal) from automatic inpatient qualification, shifting more cases to Two-Midnight judgment and increasing documentation burden.",
+    "effective": "CY2026 (year 1 of 3)",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "song_2026", "source": "JAMA Surgery (Song et al., implications of eliminating Medicare's Inpatient Only List)", "year": 2026, "locator": ""}
+    ]
+  },
+  {
+    "key": "medicare_advantage_two_midnight",
+    "summary": "Medicare Advantage plans must follow the Two-Midnight rule (effective 2024) and cover inpatient when a physician reasonably expects a stay crossing two midnights, but the two-midnight presumption does not apply identically and plans retain concurrent-review authority, so documentation must support the admission decision regardless of total stay length.",
+    "effective": "2024 onward",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "acp_ma_2026", "source": "Annals of Internal Medicine (ACP position paper on Medicare Advantage integrity)", "year": 2026, "locator": ""},
+      {"ref_id": "mcgarry_2025", "source": "JAMA Internal Medicine (McGarry et al., extended hospital stays in MA vs traditional Medicare)", "year": 2025, "locator": ""}
+    ]
+  },
+  {
+    "key": "notice_act",
+    "summary": "Hospitals must give Medicare beneficiaries written notice no later than 36 hours after observation services begin, explaining outpatient observation status, cost-sharing implications, that observation days do not count toward the SNF three-day requirement, and appeal rights.",
+    "effective": "in force",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "ali_2016", "source": "Journal of Emergency Medicine (Ali et al., observation care ethical and legal considerations)", "year": 2016, "locator": ""}
+    ]
+  },
+  {
+    "key": "audit_landscape_tpe",
+    "summary": "Effective September 2025, short-stay inpatient reviews shifted back to Medicare Administrative Contractors under Targeted Probe and Educate, an educational approach triggered by statistical outlier patterns for short-stay admissions, alongside continuing Recovery Audit Contractor activity focused on inpatient medical necessity.",
+    "effective": "2025-09",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "sheehy_appeals_2017", "source": "Journal of Hospital Medicine (Sheehy et al., observation services and the Part A complex appeals process)", "year": 2017, "locator": ""}
+    ]
+  },
+  {
+    "key": "wiser_model",
+    "summary": "Beginning January 1, 2026, the CMS WISeR model uses technology including AI support for selected traditional Medicare prior-authorization workflows in six states, but final adverse determinations must be made by licensed clinicians and the model excludes emergency and inpatient-only services.",
+    "effective": "2026-01-01",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "wiser_reporting_2026", "source": "Public reporting on CMS WISeR prior-authorization model (six-state launch)", "year": 2026, "locator": ""}
+    ]
+  },
+  {
+    "key": "hospital_at_home",
+    "summary": "The Acute Hospital Care at Home initiative shows inpatient-level care can sometimes be delivered safely at home for selected medium-acuity, stable patients, reinforcing that status is about service intensity, monitoring, and risk trajectory rather than physical bed location.",
+    "effective": "ongoing",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "cms_ahcah_2024", "source": "CMS fact sheet, Study of the Acute Hospital Care at Home Initiative", "year": 2024, "locator": ""}
+    ]
+  },
+  {
+    "key": "level_of_care_not_location",
+    "summary": "Publicly published payer and provider policies describe status as a combined judgment about severity of illness, intensity of service, response to treatment, expected duration of hospital-level care, and the availability of safe lower-acuity alternatives; level of care, not the physical location of the bed, determines status.",
+    "effective": "current",
+    "provenance": "public_payer_policy",
+    "citations": [
+      {"ref_id": "caresource_obs_policy", "source": "CareSource public observation-vs-admission policy", "year": 2024, "locator": "level of care not bed location"},
+      {"ref_id": "medstar_um_policy", "source": "MedStar Family Choice utilization-management process policy (public)", "year": 2021, "locator": "UM process; physician-advisor escalation"}
+    ]
+  }
+]

@@ -14,6 +14,7 @@ EXPECTED_ROLES = {
     "clinical_indication",
     "documentation_gap",
     "denial_overturn",
+    "gap_analysis",
 }
 
 
@@ -63,7 +64,7 @@ def test_no_proprietary_criteria_text_in_dotflows():
 
 def test_dotflows_enforce_decision_time_boundary():
     """Every DotFlow that takes the decision-time snapshot must instruct a leakage stop."""
-    for role in ("recommender", "status_conformance", "documentation_gap"):
+    for role in ("recommender", "status_conformance", "documentation_gap", "gap_analysis"):
         text = dotflows.get(role).text().lower()
         assert "leakage" in text
         assert "post-decision" in text or "post-adjudication" in text or "post-discharge" in text
@@ -71,6 +72,6 @@ def test_dotflows_enforce_decision_time_boundary():
 
 def test_dotflows_carry_anti_inflation_guardrail():
     """Core flows must forbid status-inflation framing."""
-    for role in ("recommender", "documentation_gap"):
+    for role in ("recommender", "documentation_gap", "gap_analysis"):
         text = dotflows.get(role).text().lower()
         assert "status accuracy, never status inflation" in text

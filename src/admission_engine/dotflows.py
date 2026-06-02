@@ -77,6 +77,12 @@ REGISTRY: dict[str, DotFlowSpec] = {
             "surfaced_documentation_supported_overturn",
         ),
     ),
+    "gap_analysis": DotFlowSpec(
+        role="gap_analysis",
+        filename="gap_analysis_review.md",
+        output_schema="admission_engine.gap_analysis_output.v0.1",
+        required_json_keys=("case_id", "condition_matched", "documentation_gaps", "new_care_proposed"),
+    ),
 }
 
 

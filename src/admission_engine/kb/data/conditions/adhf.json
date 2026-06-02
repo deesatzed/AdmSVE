@@ -1,0 +1,37 @@
+{
+  "condition": "adhf",
+  "aliases": ["heart failure", "chf", "adhf", "decompensated heart failure", "volume overload", "pulmonary edema"],
+  "si_thresholds": [
+    "hypotension (SBP under 90), tachycardia (HR over 120), tachypnea (RR over 24), or hypoxia (SpO2 under 90%)",
+    "significant peripheral edema, pulmonary edema on chest imaging, or elevated JVP",
+    "end-organ dysfunction (acute kidney injury, elevated natriuretic peptides, elevated troponin)",
+    "NYHA class III-IV symptoms, orthopnea, or paroxysmal nocturnal dyspnea",
+    "cardiogenic shock with hypoperfusion or need for inotropes/vasopressors"
+  ],
+  "is_requirements": [
+    "intravenous diuretics with continuous or frequent bolus dosing and strict intake/output monitoring",
+    "vasoactive medications (inotropes, vasopressors, or vasodilators)",
+    "non-invasive ventilation (BiPAP/CPAP) for respiratory support",
+    "intensive monitoring (telemetry, frequent vitals, daily weights, strict I/O)",
+    "renal replacement therapy or ultrafiltration for refractory overload",
+    "guideline-directed medical therapy optimization"
+  ],
+  "two_midnight_expectation": "Typical stay 4-7 days when intravenous diuretics are required; shorter stays possible for patients responsive to a single IV diuretic dose with stable vitals; longer for cardiogenic shock or refractory overload.",
+  "denial_downgrade_triggers": [
+    "single IV diuretic dose with rapid improvement",
+    "chronic stable heart failure without acute exacerbation",
+    "dispositional issues (awaiting placement) without ongoing active treatment"
+  ],
+  "overturn_support_factors": [
+    "documented diuretic resistance and failure of outpatient oral diuretics",
+    "documented monitoring needs (daily weights, strict I/O, electrolyte/renal monitoring)",
+    "high readmission risk (recent hospitalizations, poor adherence, no follow-up)",
+    "complicating comorbidities (CKD, diabetes, COPD, atrial fibrillation)"
+  ],
+  "provenance": "peer_reviewed",
+  "citations": [
+    {"ref_id": "van_diepen_2026", "source": "Circulation (van Diepen et al., AHA scientific statement on cardiac intensive care unit patient selection and triage)", "year": 2026, "locator": "SCAI shock staging; intensity of monitoring"},
+    {"ref_id": "whellan_2011", "source": "Journal of Cardiac Failure (Whellan et al., predictors of length of stay in heart failure)", "year": 2011, "locator": "limited LOS predictability"},
+    {"ref_id": "lee_2023", "source": "New England Journal of Medicine (Lee et al., intervention to improve acute heart failure outcomes)", "year": 2023, "locator": ""}
+  ]
+}

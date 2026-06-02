@@ -1,0 +1,62 @@
+[
+  {
+    "domain": "physiologic_stability",
+    "observation_leaning": ["stable vitals", "favorable early response to treatment", "no immediate threat of deterioration"],
+    "inpatient_escalation_clues": ["persistent hypotension", "hypoxemia", "arrhythmia", "worsening exam", "need for rapid escalation"],
+    "typical_documentation_gap": "Objective instability is present in the record but not stated clearly enough to reflect medical necessity.",
+    "provenance": "public_payer_policy",
+    "citations": [
+      {"ref_id": "caresource_obs_policy", "source": "CareSource public observation-vs-admission policy", "year": 2024, "locator": "severity-of-illness axis"}
+    ]
+  },
+  {
+    "domain": "treatment_trajectory",
+    "observation_leaning": ["short-term reassessment expected", "rule-out pathway expected"],
+    "inpatient_escalation_clues": ["failure of ED therapy", "repeated rescue interventions", "recurrent symptoms after treatment"],
+    "typical_documentation_gap": "Failed outpatient or ED treatment is not shown explicitly in the record.",
+    "provenance": "public_payer_policy",
+    "citations": [
+      {"ref_id": "medstar_um_policy", "source": "MedStar Family Choice utilization-management process policy (public)", "year": 2021, "locator": "appropriateness of care"}
+    ]
+  },
+  {
+    "domain": "service_intensity",
+    "observation_leaning": ["low-to-moderate interventions", "limited staffing burden"],
+    "inpatient_escalation_clues": ["high-intensity nursing", "titratable therapies", "respiratory support", "complex monitoring"],
+    "typical_documentation_gap": "Hospital-only services provided are not specified in the necessity narrative.",
+    "provenance": "derived_concept",
+    "citations": [
+      {"ref_id": "caresource_obs_policy", "source": "CareSource public observation-vs-admission policy", "year": 2024, "locator": "intensity-of-service axis"}
+    ]
+  },
+  {
+    "domain": "expected_duration",
+    "observation_leaning": ["likely short-term resolution"],
+    "inpatient_escalation_clues": ["reasonable expectation of prolonged stay", "documented shorter-stay exception factors"],
+    "typical_documentation_gap": "The admitting clinician's duration/risk expectation (e.g., crossing two midnights) is not stated.",
+    "provenance": "cms_public",
+    "citations": [
+      {"ref_id": "cms_two_midnight", "source": "CMS Two-Midnight Rule (public regulatory layer)", "year": 2013, "locator": "expectation standard"}
+    ]
+  },
+  {
+    "domain": "procedures_diagnostics",
+    "observation_leaning": ["serial labs or imaging", "brief monitoring"],
+    "inpatient_escalation_clues": ["urgent procedure", "operative pathway", "technically intense course", "repeated advanced testing"],
+    "typical_documentation_gap": "No explanation of why observation cannot safely complete the workup.",
+    "provenance": "derived_concept",
+    "citations": [
+      {"ref_id": "caresource_obs_policy", "source": "CareSource public observation-vs-admission policy", "year": 2024, "locator": "service package vs single intervention"}
+    ]
+  },
+  {
+    "domain": "functional_psychosocial_safety",
+    "observation_leaning": ["safe discharge path exists", "safe observation alternative exists"],
+    "inpatient_escalation_clues": ["frailty", "functional loss", "unsafe home context", "no community supports"],
+    "typical_documentation_gap": "Social and functional risk is present but not tied to medical necessity (and must materially affect safe care delivery to count).",
+    "provenance": "peer_reviewed",
+    "citations": [
+      {"ref_id": "smulowitz_2023", "source": "JAMA Internal Medicine (Smulowitz et al., functional status, cognition, social support and ED admission)", "year": 2023, "locator": "geriatric syndrome and admission"}
+    ]
+  }
+]

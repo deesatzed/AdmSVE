@@ -63,10 +63,16 @@ Defense-in-depth on any text the engine handles (the approved §8 environment is
   **refuses to load** unless `ADMISSION_ENGINE_PHI_ENV_APPROVED=1` and the `redaction-model` extra is
   installed. The OpenMed models are general-PII ("not a clinical PHI model" per their cards) — a
   recall booster on the floor, never the sole control. Recalibrate `min_score` on a domain eval set.
+- **`McpRedactor`** (optional, gated) — calls an external redaction MCP server (e.g. RedaktR) over
+  the protocol and maps its spans into our model. Keeps the heavy, non-portable, non-deterministic
+  detection pipeline as a separate gated service while our engine stays std-lib + portable +
+  deterministic at the floor. Same gating + fail-safe discipline (MCP down → floor still redacts).
+  See `docs/REDACTION_COMPARISON.md` for the evidence-based homegrown-vs-RedaktR analysis.
 
 ```bash
 pip install -e ".[redaction-model]"          # portable (CPU/CUDA, all platforms)
 pip install -e ".[redaction-model-mlx]"       # Apple-Silicon acceleration (optional)
+pip install -e ".[redaction-mcp]"             # MCP client for an external redaction server
 ```
 
 ## Run it

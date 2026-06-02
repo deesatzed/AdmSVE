@@ -70,7 +70,11 @@ Real EHR/claims exports must be mapped into the case-snapshot contract WITHOUT c
       extra is installed; absent either, redaction degrades to the deterministic floor (fail-safe,
       never fail-open on PHI). The OpenMed models are GENERAL-PII ("not a clinical PHI model" per
       their cards) — recall boosters on the floor, never the sole control. Recalibrate the model
-      min-score on a domain eval set before reliance.
+      min-score on a domain eval set before reliance. A higher-recall alternative is the
+      `McpRedactor` backend, which calls an external redaction MCP server (e.g. RedaktR) running as a
+      separate gated service in this approved environment — same fail-safe-to-floor discipline. See
+      `docs/REDACTION_COMPARISON.md` for the measured homegrown-vs-RedaktR analysis (RedaktR's recall
+      edge comes from spaCy NER, not the Apple-only MLX-LLM).
 - [ ] **Frailty / SDOH fields** (`cfs_score`, `adl_dependencies`, `cognitive_status`,
       `social_support`, `recent_admissions`) mapped if present in the real data; absent → "unknown"
       (honest-negative, never default-to-inpatient).

@@ -123,3 +123,64 @@ def test_openmed_backend_refuses_without_env_gate(monkeypatch):
     monkeypatch.delenv(ENV_GATE, raising=False)
     with pytest.raises(RuntimeError):
         OpenMedRedactor()  # env gate not set -> refuse
+
+
+# --- MCP backend (RedaktR seam) --------------------------------------------
+
+
+class _FakeMcpClient:
+    """Returns a span for the substring 'John Smith' (simulates a NER scan tool)."""
+
+    def call_tool(self, name, arguments):
+        text = arguments["text"]
+        i = text.find("John Smith")
+        if i < 0:
+            return []
+        return [{"start": i, "end": i + len("John Smith"), "entity_group": "name", "score": 0.95}]
+
+
+class _BrokenMcpClient:
+    def call_tool(self, name, arguments):
+        raise RuntimeError("MCP server unreachable")
+
+
+def test_mcp_backend_refuses_without_env_gate(monkeypatch):
+    from admission_engine.redaction.mcp_backend import ENV_GATE, McpRedactor
+
+    monkeypatch.delenv(ENV_GATE, raising=False)
+    with pytest.raises(RuntimeError):
+        McpRedactor(_FakeMcpClient())
+
+
+def test_mcp_backend_maps_spans_and_unions_with_floor(monkeypatch):
+    from admission_engine.redaction.mcp_backend import ENV_GATE, McpRedactor
+
+    monkeypatch.setenv(ENV_GATE, "1")
+    red = LayeredRedactor(extra_backends=[McpRedactor(_FakeMcpClient())])
+    out = red.redact(SAMPLE)
+    assert "[NAME]" in out.redacted_text  # MCP-detected name
+    assert "[SSN]" in out.redacted_text  # floor still applies
+
+
+def test_mcp_backend_failsafe_when_server_down(monkeypatch):
+    """If the MCP server errors, the deterministic floor must still redact (never fail open)."""
+    from admission_engine.redaction.mcp_backend import ENV_GATE, McpRedactor
+
+    monkeypatch.setenv(ENV_GATE, "1")
+    red = LayeredRedactor(extra_backends=[McpRedactor(_BrokenMcpClient())])
+    out = red.redact(SAMPLE)
+    assert "123-45-6789" not in out.redacted_text
+    assert "[SSN]" in out.redacted_text
+
+
+def test_mcp_backend_drops_low_score(monkeypatch):
+    from admission_engine.redaction.mcp_backend import ENV_GATE, McpRedactor
+
+    monkeypatch.setenv(ENV_GATE, "1")
+
+    class _LowScore:
+        def call_tool(self, name, arguments):
+            return [{"start": 0, "end": 5, "label": "name", "score": 0.1}]
+
+    spans = McpRedactor(_LowScore(), min_score=0.5).find_spans("Hello world")
+    assert spans == []

@@ -16,6 +16,9 @@ dev = ["pytest>=7.0"]
 redaction-model = ["openmed[hf]>=0.1", "transformers>=4.40", "huggingface_hub>=0.23"]
 # Apple-Silicon acceleration (optional, macOS only):
 redaction-model-mlx = ["openmed[mlx]>=0.1"]
+# MCP-backed redaction (calls an external redaction MCP server, e.g. RedaktR). The heavy pipeline
+# runs as a separate gated service; we only need an MCP client transport here.
+redaction-mcp = ["mcp>=0.9"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]

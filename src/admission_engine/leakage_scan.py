@@ -32,6 +32,7 @@ ALLOWED_BASENAMES = {
     "README.md",
     "PRE_REGISTRATION.md",
     "OPEN_DECISIONS.md",
+    "REAL_DATA_READINESS.md",
     "test_criteria_leakage_scan.py",
     "test_kb_provenance.py",
     "payer_routing.py",
